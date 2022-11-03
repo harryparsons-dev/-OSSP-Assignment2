@@ -156,13 +156,14 @@ int numberLeaves(Node * N) {
 /*
    Frees the entire subtree rooted in 'root' (this includes the node 'root')
  */
-void free_subtree(Node * root) {
+Node* freeSubtree(Node * root) {
   if (root == NULL)
-    return;
+    return NULL;
 
-  free_subtree(root->left);
-  free_subtree(root->right);
+  freeSubtree(root->left);
+  freeSubtree(root->right);
   free(root);
+
 }
 
 /*
@@ -178,7 +179,7 @@ Node * removeSubtree(Node * root, int data) {
 
   // entire tree
   if (root->data == data) {
-    free_subtree(root);
+    freeSubtree(root);
     return NULL;
   }
 
@@ -186,11 +187,11 @@ Node * removeSubtree(Node * root, int data) {
   Node * parent = find_parent(root, data);
   if (data > parent->data) {
     assert(parent->left == NULL || parent->left->data == data);
-    free_subtree(parent->left);
+    freeSubtree(parent->left);
     parent->left = NULL;
   } else {
     assert(parent->right == NULL || parent->right->data == data);
-    free_subtree(parent->right);
+    freeSubtree(parent->right);
     parent->right = NULL;
   }
 
@@ -219,11 +220,15 @@ int nodeDepth (Node * R, Node * N) {
 
 int countNodes(Node *N){
    
-
+    int count = 1;
     if(N == NULL){
       return  0;
     }
-    return 1 + countNodes(N->left) + countNodes(N->left);
+    else{
+      count += countNodes(N->right) + countNodes(N->left);
+      return count;
+    }
+    
     
 
 
@@ -250,33 +255,55 @@ float avgSubtree(Node *N)
 
 
 // Turn BST tree to sorted array
-/*
+
 void BST_to_array(Node* root, int* BSTarr){
 
   //int* BSTarr = malloc(sizeof(int) * countNodes(root));
   static int index = 0;
 
 	if(root == NULL){
-    //eturn BSTarr;
+      return;
 	}
-  
- 
-	printf("index: %d\n", index);
-  BST_to_array(root->right, BSTarr);
-  printf("Going down right %d\n", root->data);
+  if(root->right != NULL){
+   BST_to_array(root->right, BSTarr);
+  } 
   BSTarr[index++] = root->data;
+  if(root->left !=NULL){
+    BST_to_array(root->left, BSTarr);
+  }
+}
 
-  printf("Adding to array\n");
-  BST_to_array(root->left, BSTarr);
-  
+int findMiddleIndex(int* arr){
+  int count = 0;
+  for(int i = 0; arr[i] != 0; i++){
+    count ++;
+  }
 
-   
- 
- //return BSTarr;
+  if(count % 2 == 0){
+    return (count/2);
+  }
+  else{
+    return ((count) /2);
+  }
 
- 
 
 }
+
+
+Node* balanceTree_helper(int* arr, int start, int end){
+  if(start>end){
+    return NULL;
+  }
+  int middle = (end+start)/2;
+  Node* balanced;
+  balanced = addNode(NULL,arr[middle]);
+
+  balanced->right = balanceTree_helper(arr,start,middle-1);
+  balanced->left = balanceTree_helper(arr,middle+1,end);
+
+  return balanced;
+}
+
 
 // This functions converts an unbalanced BST to a balanced BST
 Node* balanceTree(Node* root)
@@ -284,16 +311,24 @@ Node* balanceTree(Node* root)
 
 	// TODO: Implement this function
 
-	  int* BSTarr[countNodes(root)];
-
+	  int* BSTarr = malloc(sizeof(int) * countNodes(root));
     BST_to_array(root, BSTarr);
-   
+   /*
     printf("Array: ");
     for(int j=0;j<countNodes(root); j++){
-       // printf("[%d] ," ,BSTarr[j]);
+        printf("[%d], " ,BSTarr[j]);
     }
     printf("\n");
+    */
+    int middle = findMiddleIndex(BSTarr);
+    printf("Middle index: %d\n", middle);
+    Node *balanced;
+
+    balanced = balanceTree_helper(BSTarr,0,countNodes(root)-1);
     free(BSTarr);
+    return balanced;
+    
+   
+
 
 }
-*/
