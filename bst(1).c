@@ -1,23 +1,14 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 #include <unistd.h>
-#include <assert.h>
-#include <stdbool.h>
 #include "bst.h"
-
-/*
-
-Place for the BST functions from Exercise 1.
-
-*/
 
 struct _Node {
   int data;
   struct _Node* left;
   struct _Node* right;
 };
-
 
 Node* addNode(Node *root, int data)
 {
@@ -50,7 +41,7 @@ Node* addNode(Node *root, int data)
       prev->left = newNode;
   }
 
-  return root;
+  return newNode;
 }
 
 Node* freeSubtree(Node *N) {
@@ -186,81 +177,4 @@ int nodeDepth(Node *R, Node *N) {
     return subDepth + 1;
   else
     return -1;
-}
-
-
-float sum(Node *N){ // helper to calculcate the sum
-  float total = 0;
-  if(N == NULL){
-    return 0;
-  }
-  total = sum(N->right) + N->data + sum(N->left);
-  
-  return total;
-}
-
-float avgSubtree(Node *N)
-{
-
-	// TODO: Implement this function
-  return (sum(N) / countNodes(N));
-
-}
-
-
-
-// Turn BST tree to sorted array
-
-void BST_to_array(Node* root, int* BSTarr){
-
-  //int* BSTarr = malloc(sizeof(int) * countNodes(root));
-  static int index = 0;
-
-	if(root == NULL){
-      return;
-	}
-  if(root->right != NULL){
-   BST_to_array(root->right, BSTarr);
-  } 
-  BSTarr[index++] = root->data;
-  if(root->left !=NULL){
-    BST_to_array(root->left, BSTarr);
-  }
-}
-
-
-
-
-Node* balanceTree_helper(int* arr, int start, int end){
-  if(start>end){
-    return NULL;
-  }
-  int middle = (end+start)/2;
-  Node* balanced;
-  balanced = addNode(NULL,arr[middle]);
-
-  balanced->right = balanceTree_helper(arr,start,middle-1);
-  balanced->left = balanceTree_helper(arr,middle+1,end);
-
-  return balanced;
-}
-
-
-// This functions converts an unbalanced BST to a balanced BST
-Node* balanceTree(Node* root)
-{
-
-	// TODO: Implement this function
-
-	  int* BSTarr = malloc(sizeof(int) * countNodes(root));
-    BST_to_array(root, BSTarr);
-    Node *balanced;
-
-    balanced = balanceTree_helper(BSTarr,0,countNodes(root)-1);
-    free(BSTarr);
-    return balanced;
-    
-   
-
-
 }
