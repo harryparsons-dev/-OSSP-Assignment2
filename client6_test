@@ -1,0 +1,14 @@
+addNode 50
+addNode 40
+addNode 30
+addNode 60
+addNode 65
+addNode 66
+addNode 25
+addNode 21
+removeNode 40
+removeNode 21
+addNode 100
+avgSubtree
+countNodes
+addNode 12

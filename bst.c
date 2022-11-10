@@ -12,14 +12,14 @@ Place for the BST functions from Exercise 1.
 
 */
 
-struct _Node {
+struct _Node
+{
   int data;
-  struct _Node* left;
-  struct _Node* right;
+  struct _Node *left;
+  struct _Node *right;
 };
 
-
-Node* addNode(Node *root, int data)
+Node *addNode(Node *root, int data)
 {
   Node *newNode = malloc(sizeof(Node));
   newNode->data = data;
@@ -30,20 +30,23 @@ Node* addNode(Node *root, int data)
   Node *prev = NULL;
 
   temp = root;
-  while(temp) {
+  while (temp)
+  {
     prev = temp;
     if (temp->data > newNode->data)
       temp = temp->right;
     else if (temp->data < newNode->data)
       temp = temp->left;
-    else {
+    else
+    {
       free(newNode);
       return NULL;
     }
   }
-  if (prev==NULL)
+  if (prev == NULL)
     root = newNode;
-  else {
+  else
+  {
     if (prev->data > newNode->data)
       prev->right = newNode;
     else
@@ -53,7 +56,8 @@ Node* addNode(Node *root, int data)
   return root;
 }
 
-Node* freeSubtree(Node *N) {
+Node *freeSubtree(Node *N)
+{
   if (N == NULL)
     return NULL;
   freeSubtree(N->left);
@@ -62,17 +66,20 @@ Node* freeSubtree(Node *N) {
   return NULL;
 }
 
-void removeSubtreeWorker(Node *R, int data) {
+void removeSubtreeWorker(Node *R, int data)
+{
   if (R == NULL)
     return;
 
-  if (R->left && R->left->data == data) {
+  if (R->left && R->left->data == data)
+  {
     freeSubtree(R->left);
     R->left = NULL;
     return;
   }
 
-  if (R->right && R->right->data == data) {
+  if (R->right && R->right->data == data)
+  {
     freeSubtree(R->right);
     R->right = NULL;
     return;
@@ -81,14 +88,16 @@ void removeSubtreeWorker(Node *R, int data) {
   if (R->data < data)
     removeSubtreeWorker(R->left, data);
   else
-    removeSubtreeWorker(R->right, data);  
+    removeSubtreeWorker(R->right, data);
 }
 
-Node* removeSubtree(Node *R, int data) {
+Node *removeSubtree(Node *R, int data)
+{
   if (R == NULL)
     return NULL;
 
-  if (R->data == data) {
+  if (R->data == data)
+  {
     freeSubtree(R);
     return NULL;
   }
@@ -98,10 +107,10 @@ Node* removeSubtree(Node *R, int data) {
 
 void displaySubtree(Node *N)
 {
-  if (N==NULL)
-    {
-      return ;
-    }
+  if (N == NULL)
+  {
+    return;
+  }
   displaySubtree(N->right);
   printf("%d\n", N->data);
   displaySubtree(N->left);
@@ -109,8 +118,8 @@ void displaySubtree(Node *N)
 
 int countNodes(Node *N)
 {
-  int count=0;
-  if(N==NULL)
+  int count = 0;
+  if (N == NULL)
     return 0;
   count = count + countNodes(N->right);
   count = count + countNodes(N->left);
@@ -119,51 +128,63 @@ int countNodes(Node *N)
 }
 
 // this is the most complicated task
-Node* removeNode(Node* root, int data)
+Node *removeNode(Node *root, int data)
 {
   // Ensure root isn't null.
-  if (root == NULL) {
+  if (root == NULL)
+  {
     return NULL;
   }
-  	
-  if (data > root->data) {  // data is in the left sub-tree.
+
+  if (data > root->data)
+  { // data is in the left sub-tree.
     root->left = removeNode(root->left, data);
-  } else if (data < root->data) { // data is in the right sub-tree.
+  }
+  else if (data < root->data)
+  { // data is in the right sub-tree.
     root->right = removeNode(root->right, data);
-  } else { // Found the correct node with data
+  }
+  else
+  { // Found the correct node with data
     // Check the three cases - no child, 1 child, 2 child...
     // No Children
-    if (root->left == NULL && root->right == NULL) {
+    if (root->left == NULL && root->right == NULL)
+    {
       free(root);
       root = NULL;
     }
     // 1 child (on the right)
-    else if (root->left == NULL) {
+    else if (root->left == NULL)
+    {
       Node *temp = root; // save current node
       root = root->right;
       free(temp);
     }
     // 1 child (on the left)
-    else if (root->right == NULL) {
+    else if (root->right == NULL)
+    {
       Node *temp = root; // save current node
       root = root->left;
       free(temp);
     }
     // Two children
-    else {
+    else
+    {
       // find minimal data of right sub tree
-      Node *temp = root->left; 
-      while(temp->right != NULL) {
+      Node *temp = root->left;
+      while (temp->right != NULL)
+      {
         temp = temp->right;
       }
-      root->data = temp->data; // duplicate the node
+      root->data = temp->data;                         // duplicate the node
       root->left = removeNode(root->left, root->data); // delete the duplicate node
     }
-  }	
+  }
   return root; // parent node can update reference
 }
 
-int numberLeaves(Node *N) {
+int numberLeaves(Node *N)
+{
   if (N == NULL)
     return 0;
 
@@ -173,7 +194,8 @@ int numberLeaves(Node *N) {
   return numberLeaves(N->left) + numberLeaves(N->right);
 }
 
-int nodeDepth(Node *R, Node *N) {
+int nodeDepth(Node *R, Node *N)
+{
   if (R == NULL || N == NULL)
     return -1;
 
@@ -188,79 +210,75 @@ int nodeDepth(Node *R, Node *N) {
     return -1;
 }
 
-
-float sum(Node *N){ // helper to calculcate the sum
+float sum(Node *N)
+{ // helper to calculcate the sum
   float total = 0;
-  if(N == NULL){
+  if (N == NULL)
+  {
     return 0;
   }
   total = sum(N->right) + N->data + sum(N->left);
-  
+
   return total;
 }
 
 float avgSubtree(Node *N)
 {
 
-	// TODO: Implement this function
+  // TODO: Implement this function
   return (sum(N) / countNodes(N));
-
 }
-
-
 
 // Turn BST tree to sorted array
 
-void BST_to_array(Node* root, int* BSTarr){
+void BST_to_array(Node *root, int *BSTarr)
+{
 
-  //int* BSTarr = malloc(sizeof(int) * countNodes(root));
+  // int* BSTarr = malloc(sizeof(int) * countNodes(root));
   static int index = 0;
 
-	if(root == NULL){
-      return;
-	}
-  if(root->right != NULL){
-   BST_to_array(root->right, BSTarr);
-  } 
+  if (root == NULL)
+  {
+    return;
+  }
+  if (root->right != NULL)
+  {
+    BST_to_array(root->right, BSTarr);
+  }
   BSTarr[index++] = root->data;
-  if(root->left !=NULL){
+  if (root->left != NULL)
+  {
     BST_to_array(root->left, BSTarr);
   }
 }
 
-
-
-
-Node* balanceTree_helper(int* arr, int start, int end){
-  if(start>end){
+Node *balanceTree_helper(int *arr, int start, int end)
+{
+  if (start > end)
+  {
     return NULL;
   }
-  int middle = (end+start)/2;
-  Node* balanced;
-  balanced = addNode(NULL,arr[middle]);
+  int middle = (end + start) / 2;
+  Node *balanced;
+  balanced = addNode(NULL, arr[middle]);
 
-  balanced->right = balanceTree_helper(arr,start,middle-1);
-  balanced->left = balanceTree_helper(arr,middle+1,end);
+  balanced->right = balanceTree_helper(arr, start, middle - 1);
+  balanced->left = balanceTree_helper(arr, middle + 1, end);
 
   return balanced;
 }
 
-
 // This functions converts an unbalanced BST to a balanced BST
-Node* balanceTree(Node* root)
+Node *balanceTree(Node *root)
 {
 
-	// TODO: Implement this function
+  // TODO: Implement this function
 
-	  int* BSTarr = malloc(sizeof(int) * countNodes(root));
-    BST_to_array(root, BSTarr);
-    Node *balanced;
+  int *BSTarr = malloc(sizeof(int) * countNodes(root));
+  BST_to_array(root, BSTarr);
+  Node *balanced;
 
-    balanced = balanceTree_helper(BSTarr,0,countNodes(root)-1);
-    free(BSTarr);
-    return balanced;
-    
-   
-
-
+  balanced = balanceTree_helper(BSTarr, 0, countNodes(root) - 1);
+  free(BSTarr);
+  return balanced;
 }
