@@ -160,7 +160,7 @@ void test_task34(){
   pthread_create(&threads[5], NULL, (void *) downtime, NULL);
 
 
-  // join all readers
+  //join all readers
   for (i = 0; i < 6; i++) {
     pthread_join(threads[i], NULL);
   }

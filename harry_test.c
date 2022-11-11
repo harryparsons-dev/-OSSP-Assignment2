@@ -4,8 +4,8 @@
 #include <string.h>
 #include <unistd.h>
 #include "bst.h"
-#include "serve_client.c"
-Node *a;
+//#include "serve_client.c"
+Node *root;
 
 void clean()
 {
@@ -13,19 +13,19 @@ void clean()
   /******   Free resources before program ends  ********/
   /*****************************************************/
 
-  a = freeSubtree(a);
-  a = NULL;
+  root = freeSubtree(root);
+  root = NULL;
   return;
 }
 
 int main()
 {
 
-  Node *a, *b, *c;
-  a = addNode(NULL, 50);
-  a = addNode(a, 40);
-  a = addNode(a, 30);
-  a = addNode(a, 31);
+  // Node *a, *b, *c;
+  // a = addNode(NULL, 50);
+  // a = addNode(a, 40);
+  // a = addNode(a, 30);
+  // a = addNode(a, 31);
   // a = addNode(a,50);
   // a = addNode(a,60);
   // a = addNode(a,65);
@@ -47,8 +47,15 @@ int main()
   // printf("After balanced: \n");
   // displaySubtree(a);
   // printf("Average: %f", avgSubtree(a));
-  ServeClient("client6_test");
-
+  //ServeClient("client6_test");
+   FILE *fp;
+  fp = fopen("client6_test", "r");
+  char line[128];
+  
+  while(fgets(line,128,fp) != NULL){
+     printf("%s", line);
+  }
+  fclose(fp);
   clean();
 
   return 0;

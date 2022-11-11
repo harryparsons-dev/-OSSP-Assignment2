@@ -59,7 +59,7 @@ Node *addNode(Node *root, int data)
 Node *freeSubtree(Node *N)
 {
   if (N == NULL)
-    return NULL;
+    return N;
   freeSubtree(N->left);
   freeSubtree(N->right);
   free(N);
@@ -226,7 +226,13 @@ float avgSubtree(Node *N)
 {
 
   // TODO: Implement this function
-  return (sum(N) / countNodes(N));
+  if(sum(N) > 0 && countNodes(N)>0){
+    return (sum(N) / countNodes(N));
+  }
+  else{
+    return -1;
+  }
+  
 }
 
 // Turn BST tree to sorted array

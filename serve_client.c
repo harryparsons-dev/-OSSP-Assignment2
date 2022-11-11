@@ -1,17 +1,22 @@
 //#include <stdio.h>
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-// Node *root = NULL;
+//Node *N = NULL;
 
 void *downtime()
 {
     int count = 0;
     while (count < 3)
-    {
-        pthread_mutex_lock(&mutex1);
-        balanceTree(root);
-        pthread_mutex_unlock(&mutex1);
+    {   
         sleep(2);
+        pthread_mutex_lock(&mutex1);
+        balanceTree(root);  
+     
+        pthread_mutex_unlock(&mutex1);
+        count++;
+        
     }
+
+    return 0;
 }
 
 void strip(char *s)
@@ -35,7 +40,8 @@ void *ServeClient(char *client)
 {
 
     char *client_no = strdup(client);
-    client_no = strtok(client_no, "_");
+    char *saveptr = NULL;
+    client_no = strtok_r(client_no, "_",&saveptr);
     char *number = strdup(client_no);
 
     char *name = strdup(client);
@@ -46,62 +52,78 @@ void *ServeClient(char *client)
     FILE *fp;
     fp = fopen(client, "r");
 
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
-
     if (fp == NULL)
-        exit(EXIT_FAILURE);
+        return 0;
 
-    while ((read = getline(&line, &len, fp)) != -1)
-    {
+    char line[128];
+  
+    while(fgets(line,128,fp) != NULL){
+     
+  
 
+   
+       // pthread_mutex_lock(&mutex1);
         char *split;
-        split = strtok(line, " ");
+        split = strtok_r(line, " ",&saveptr);
         strip(split);
         // printf("Line read - <%s>", split);
 
         if (strcmp(split, "addNode") == 0)
         {
+            
             pthread_mutex_lock(&mutex1);
-            char *num = strtok(NULL, split);
-            int num_int = atoi(num);
+        
+            char *num = strtok_r(NULL, split,&saveptr);
+            unsigned int num_int = atoi(num);
             root = addNode(root, num_int);
+            printf("%sinsertNode %u\n", number, num_int);
+
             pthread_mutex_unlock(&mutex1);
-            printf("%sinsertNode %d\n", number, num_int);
         }
         else if (strcmp(split, "removeNode") == 0)
         {
             pthread_mutex_lock(&mutex1);
-            char *num = strtok(NULL, split);
-            int num_int = atoi(num);
+          
+            char *num = strtok_r(NULL, split,&saveptr);
+            unsigned int num_int = atoi(num);
             root = removeNode(root, num_int);
+            printf("%sdeleteNode %u\n", number, num_int);  
             pthread_mutex_unlock(&mutex1);
-            printf("%sdeleteNode %d\n", number, num_int);
         }
         else if (strcmp(split, "countNodes") == 0)
         {
-            pthread_mutex_lock(&mutex1);
+           // pthread_mutex_lock(&mutex1);
             int count = countNodes(root);
             printf("%scountNodes = %d\n", number, count);
-            pthread_mutex_unlock(&mutex1);
+            //pthread_mutex_unlock(&mutex1);
         }
         else if (strcmp(split, "avgSubtree") == 0)
         {
-            pthread_mutex_lock(&mutex1);
+            //pthread_mutex_lock(&mutex1);
             float avg = avgSubtree(root);
             printf("%savgSubtree = %f\n", number, avg);
-            pthread_mutex_unlock(&mutex1);
+           // pthread_mutex_unlock(&mutex1);
         }
+        //pthread_mutex_unlock(&mutex1);
     }
+
+
+
+
+
+
+
+
+
 
     fclose(fp);
-    if (line)
-    {
-        free(line);
-    }
+ 
+    //free(line);
 
-    // exit(EXIT_SUCCESS);
+    //exit(EXIT_SUCCESS);
 
-    displaySubtree(root);
+    //displaySubtree(root);
+
+    return 0;
+    
 }
