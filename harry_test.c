@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "bst.h"
+//#include "bst.c"
 //#include "serve_client.c"
 Node *root;
 
@@ -21,14 +22,42 @@ void clean()
 int main()
 {
 
-  // Node *a, *b, *c;
-  // a = addNode(NULL, 50);
-  // a = addNode(a, 40);
-  // a = addNode(a, 30);
-  // a = addNode(a, 31);
-  // a = addNode(a,50);
-  // a = addNode(a,60);
-  // a = addNode(a,65);
+  Node *a, *b, *c;
+  a = addNode(NULL, 1);
+  a = addNode(a, 49);
+  a = addNode(a, 48);
+  a = addNode(a, 47);
+  a = addNode(a,46);
+  a = addNode(a,45);
+ a = addNode(a,44);
+ a = addNode(a,60);
+  // b = addNode(NULL,50);
+  // c= NULL;
+  // displaySubtree(a);
+  // printf("\n");
+  // displaySubtree(b);
+  // int f = nodeDepth (a, a->right->right->right->right->right);
+  // int node = nodeDepth(a,NULL);
+  // printf("Before balancing node depth: %d\n", f);
+  // a = balanceTree(a);
+  // f = nodeDepth (a, a->right->left);
+  // printf("After balancing node depth: %d\n", f);
+
+  displaySubtree(a);
+  printf("after balancing\n");
+  a = balanceTree(a);
+  displaySubtree(a);
+
+ 
+
+  a = freeSubtree(a);
+  a = NULL;
+  b = freeSubtree(b);
+  b = NULL;
+
+
+  clean();
+  
 
   // printf("test: %d\n", a->data );
   // printf("%d, ", a->data);
@@ -48,15 +77,8 @@ int main()
   // displaySubtree(a);
   // printf("Average: %f", avgSubtree(a));
   //ServeClient("client6_test");
-   FILE *fp;
-  fp = fopen("client6_test", "r");
-  char line[128];
   
-  while(fgets(line,128,fp) != NULL){
-     printf("%s", line);
-  }
-  fclose(fp);
-  clean();
+
 
   return 0;
 }

@@ -1,0 +1,5 @@
+ definitely lost: 0 bytes in 0 blocks
+==10769==    indirectly lost: 0 bytes in 0 blocks
+==10769==      possibly lost: 1,632 bytes in 6 blocks
+==10769==    still reachable: 26,258 bytes in 1,007 blocks
+==10769==         suppressed: 0 bytes in 0 blocks

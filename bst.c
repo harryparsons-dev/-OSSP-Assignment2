@@ -40,28 +40,31 @@ Node *addNode(Node *root, int data)
     else
     {
       free(newNode);
+      newNode = NULL;
       return NULL;
     }
   }
-  if (prev == NULL)
+  if (prev == NULL){
     root = newNode;
+  }
   else
   {
     if (prev->data > newNode->data)
       prev->right = newNode;
     else
       prev->left = newNode;
+    
   }
-
   return root;
 }
 
 Node *freeSubtree(Node *N)
 {
   if (N == NULL)
-    return N;
+    return NULL;
   freeSubtree(N->left);
   freeSubtree(N->right);
+  //N = NULL;
   free(N);
   return NULL;
 }
@@ -125,6 +128,7 @@ int countNodes(Node *N)
   count = count + countNodes(N->left);
   count = count + 1;
   return count;
+
 }
 
 // this is the most complicated task
@@ -226,7 +230,7 @@ float avgSubtree(Node *N)
 {
 
   // TODO: Implement this function
-  if(sum(N) > 0 && countNodes(N)>0){
+  if(countNodes(N)>0){
     return (sum(N) / countNodes(N));
   }
   else{
@@ -237,25 +241,26 @@ float avgSubtree(Node *N)
 
 // Turn BST tree to sorted array
 
-void BST_to_array(Node *root, int *BSTarr)
+int* BST_to_array(Node *root, int* BSTarr)
 {
 
-  // int* BSTarr = malloc(sizeof(int) * countNodes(root));
   static int index = 0;
 
   if (root == NULL)
   {
-    return;
+    return NULL;
   }
-  if (root->right != NULL)
-  {
-    BST_to_array(root->right, BSTarr);
+ 
+  if(root->right != NULL){
+    BSTarr = BST_to_array(root->right, BSTarr);
   }
   BSTarr[index++] = root->data;
-  if (root->left != NULL)
-  {
+  if(root->left != NULL){
     BST_to_array(root->left, BSTarr);
   }
+  return BSTarr;
+  
+
 }
 
 Node *balanceTree_helper(int *arr, int start, int end)
@@ -265,8 +270,8 @@ Node *balanceTree_helper(int *arr, int start, int end)
     return NULL;
   }
   int middle = (end + start) / 2;
-  Node *balanced;
-  balanced = addNode(NULL, arr[middle]);
+  Node *balanced = NULL;
+  balanced = addNode(balanced, arr[middle]);
 
   balanced->right = balanceTree_helper(arr, start, middle - 1);
   balanced->left = balanceTree_helper(arr, middle + 1, end);
@@ -279,12 +284,26 @@ Node *balanceTree(Node *root)
 {
 
   // TODO: Implement this function
+  Node * balanced;
+  if (root == NULL){
+    return NULL;
+  }
+  else if (countNodes(root) == 1){
+    return root;
+  }
+  else 
+  { 
 
-  int *BSTarr = malloc(sizeof(int) * countNodes(root));
-  BST_to_array(root, BSTarr);
-  Node *balanced;
+     int BSTarr[countNodes(root)];
+     BST_to_array(root, BSTarr);
+    
+    balanced = balanceTree_helper(BSTarr, 0, countNodes(root)-1);
 
-  balanced = balanceTree_helper(BSTarr, 0, countNodes(root) - 1);
-  free(BSTarr);
-  return balanced;
+
+    return balanced;
+  }
+
+
+
+
 }
